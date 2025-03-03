@@ -1,12 +1,14 @@
-import LoginButton from "@/components/login-button";
+import { LoginForm } from "@/components/login-form";
 import React from "react";
 
 type Props = {};
 
 export default function Login({}: Props) {
   return (
-    <div className="justify-center items-center min-h-screen flex">
-      <LoginButton />
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <LoginForm />
+      </div>
     </div>
   );
 }

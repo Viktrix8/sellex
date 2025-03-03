@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import { toast } from "sonner";
 
 export const authConfig = {
   providers: [
@@ -26,5 +27,8 @@ export const authConfig = {
         return true;
       }
     },
+  },
+  pages: {
+    signIn: "/login",
   },
 } satisfies NextAuthConfig;
