@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import CreateTicketForm from "@/components/create-ticket-form";
 import { prisma } from "@/lib/prisma";
 import React from "react";

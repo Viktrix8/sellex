@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { auth } from "@/auth";
 import TicketsTable from "@/components/tickets-table";
 import { prisma } from "@/lib/prisma";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import EventsList from "@/components/events-list";
 import { prisma } from "@/lib/prisma";
 
