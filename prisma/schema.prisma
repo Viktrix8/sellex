@@ -34,5 +34,9 @@ model Ticket {
   price  Float
   seller String
 
+  count Int? @default(1)
+
   isStanding Boolean @default(false)
+
+  note String?
 }

@@ -135,20 +135,32 @@ export default function TicketsTable({
       accessorKey: "section",
       header: "Sekcia",
       cell: ({ row }) =>
-        row.original.isStanding ? "STÁNIE" : row.getValue("section") || "-",
+        row.original.isStanding
+          ? row.original.note || "STANIE"
+          : row.getValue("section") || "-",
     },
     {
       accessorKey: "row",
       header: "Rad",
       cell: ({ row }) =>
-        row.original.isStanding ? "STÁNIE" : row.getValue("row") || "-",
+        row.original.isStanding ? "-" : row.getValue("row") || "-",
     },
     {
       accessorKey: "seat",
       header: "Sedadlo",
       cell: ({ row }) =>
-        row.original.isStanding ? "STÁNIE" : row.getValue("seat") || "-",
+        row.original.isStanding ? "-" : row.getValue("seat") || "-",
     },
+    {
+      accessorKey: "count",
+      header: "Počet",
+      cell: ({ row }) => {
+        const count = row.original.count ?? 1;
+
+        return row.original.isStanding ? count : count > 0 ? count : 1;
+      },
+    },
+
     {
       accessorKey: "price",
       header: () => <div className="text-right">Cena</div>,

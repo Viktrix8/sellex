@@ -86,7 +86,9 @@ export default function TicketsList({ tickets }: Props) {
                     {ticket.seat}
                   </CardDescription>
                 ) : (
-                  <CardDescription>STÁNIE</CardDescription>
+                  <CardDescription>
+                    {ticket.note} · {ticket.count} ks{" "}
+                  </CardDescription>
                 )}
               </CardHeader>
               <CardContent className="text-sm">{ticket.price} EUR</CardContent>

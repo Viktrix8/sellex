@@ -9,6 +9,8 @@ type TicketBody = {
   seat: number;
   price: number;
   type: boolean;
+  note: string | null;
+  count: number | null;
 };
 
 export async function POST(req: Request) {
@@ -30,6 +32,8 @@ export async function POST(req: Request) {
         price: body.price,
         seller: session.user.username,
         isStanding: body.type,
+        note: body.note,
+        count: body.count,
       },
     });
 

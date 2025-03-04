@@ -38,21 +38,38 @@ const FormSchema = z
     event: z
       .string({ required_error: "Vyber prosím event ticketu." })
       .min(1, "Event nemôže byť prázdny."),
-    section: z.string({ required_error: "Napíš prosím sekciu." }).optional(),
-    row: z.string({ required_error: "Napíš prosím radu." }).optional(),
-    seat: z.string({ required_error: "Napíš prosím sedadlo." }).optional(),
+    section: z.string().optional(),
+    row: z.string().optional(),
+    seat: z.string().optional(),
     price: z
       .string({ required_error: "Napíš prosím cenu." })
       .min(1, "Cena nemôže byť prázdna.")
       .regex(/^\d+(\.\d+)?$/, "Cena musí byť číslo."),
     type: z.boolean().default(false),
+    note: z
+      .string()
+      .min(1, "Vyber prosím typ stánia.")
+      .optional()
+      .or(z.literal("")),
+    count: z
+      .string()
+      .regex(/^\d+(\.\d+)?$/, "Počet lístkov musí byť číslo.")
+      .min(1, "Počet kusov nemôže byť menší ako 1.")
+      .optional()
+      .or(z.literal("")),
   })
   .refine((data) => {
     if (!data.type) {
       return data.section && data.row && data.seat;
     }
     return true;
-  }, "Sekcia, Rad a Sedadlo sú povinné pre sedenie.");
+  }, "Sekcia, Rad a Sedadlo sú povinné pre sedenie.")
+  .refine((data) => {
+    if (data.type) {
+      return data.note && data.count;
+    }
+    return true;
+  }, "Typ stánia a počet kusov sú povinné pre stánie.");
 
 export default function CreateTicketForm({ events }: Props) {
   const router = useRouter();
@@ -66,11 +83,13 @@ export default function CreateTicketForm({ events }: Props) {
       seat: "",
       price: "",
       type: false,
+      note: "",
+      count: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const { event, price, seat, row, section, type } = data;
+    const { event, price, seat, row, section, type, note, count } = data;
 
     try {
       const res = await fetch("/api/tickets/create", {
@@ -85,6 +104,8 @@ export default function CreateTicketForm({ events }: Props) {
           section: Number(section),
           eventId: Number(event),
           type,
+          note,
+          count: Number(count),
         }),
       });
 
@@ -150,7 +171,32 @@ export default function CreateTicketForm({ events }: Props) {
                   </FormItem>
                 )}
               />
-              {!form.watch("type") && (
+              {form.watch("type") ? (
+                <FormField
+                  name="note"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Typ Stánia</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Vyber typ stánia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Stánie pri pódiu">
+                            Stánie pri pódiu
+                          </SelectItem>
+                          <SelectItem value="Stánie">Stánie</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : (
                 <>
                   <FormField
                     name="section"
@@ -194,6 +240,26 @@ export default function CreateTicketForm({ events }: Props) {
                     )}
                   />
                 </>
+              )}
+              {form.watch("type") && (
+                <FormField
+                  name="count"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Počet kusov</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input {...field} className="pr-10" />{" "}
+                          <span className="absolute inset-y-0 right-3 flex items-center text-gray-500">
+                            ks
+                          </span>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               )}
 
               <FormField
