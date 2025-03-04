@@ -129,7 +129,7 @@ export default function TicketsTable({
     setIsDialogOpen(true);
   };
 
-  const columns: ColumnDef<Ticket>[] = [
+  const baseColumns: ColumnDef<Ticket>[] = [
     { accessorKey: "event.name", header: "Meno eventu" },
     {
       accessorKey: "section",
@@ -163,13 +163,7 @@ export default function TicketsTable({
     },
   ];
 
-  showSeller &&
-    columns.push({
-      accessorKey: "seller",
-      header: "Seller",
-    });
-
-  columns.push({
+  const actionColumn: ColumnDef<Ticket> = {
     id: "actions",
     cell: ({ row }) => {
       const ticket = row.original;
@@ -207,7 +201,13 @@ export default function TicketsTable({
         </DropdownMenu>
       );
     },
-  });
+  };
+
+  const columns = [
+    ...baseColumns,
+    ...(showSeller ? [{ accessorKey: "seller", header: "Seller" }] : []),
+    actionColumn,
+  ];
 
   const table = useReactTable({
     data: tickets,

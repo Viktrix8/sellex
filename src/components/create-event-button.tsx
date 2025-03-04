@@ -25,8 +25,6 @@ import {
 import { Input } from "./ui/input";
 import { toast } from "sonner";
 
-type Props = {};
-
 const FormSchema = z.object({
   name: z
     .string({ required_error: "Napíš prosím meno eventu." })
@@ -39,7 +37,7 @@ const FormSchema = z.object({
     ),
 });
 
-export default function CreateEventButton({}: Props) {
+export default function CreateEventButton() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     mode: "onBlur",

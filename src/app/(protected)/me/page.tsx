@@ -29,7 +29,7 @@ export default async function Page() {
     <div>
       <h2 className="text-2xl mb-2 ">Moje lístky</h2>
       <hr className="my-4" />
-      <TicketsTable data={tickets} />
+      <TicketsTable showSeller={false} hideEdit={false} data={tickets} />
     </div>
   );
 }
