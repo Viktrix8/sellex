@@ -49,6 +49,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 type Props = {
   data: Ticket[];
+  showSeller: boolean;
+  hideEdit: boolean;
 };
 
 const FormSchema = z.object({
@@ -58,7 +60,11 @@ const FormSchema = z.object({
     .regex(/^\d+(\.\d+)?$/, "Cena musí byť číslo."),
 });
 
-export default function TicketsTable({ data }: Props) {
+export default function TicketsTable({
+  data,
+  showSeller = false,
+  hideEdit = false,
+}: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>(data);
@@ -155,44 +161,53 @@ export default function TicketsTable({ data }: Props) {
         return <div className="text-right font-medium">{formatted}</div>;
       },
     },
-    {
-      id: "actions",
-      cell: ({ row }) => {
-        const ticket = row.original;
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open Menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel asChild>
-                <p className="p-2 text-sm flex items-center gap-2">
-                  <Hammer width={12} height={12} />
-                  Akcie
-                </p>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+  ];
+
+  showSeller &&
+    columns.push({
+      accessorKey: "seller",
+      header: "Seller",
+    });
+
+  columns.push({
+    id: "actions",
+    cell: ({ row }) => {
+      const ticket = row.original;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open Menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel asChild>
+              <p className="p-2 text-sm flex items-center gap-2">
+                <Hammer width={12} height={12} />
+                Akcie
+              </p>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {!hideEdit && (
               <DropdownMenuItem asChild onClick={() => openDialog(ticket)}>
                 <p className="p-2 text-sm flex items-center gap-2">
                   <Pencil width={12} height={12} />
                   Upraviť
                 </p>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild onClick={() => deleteTicket(ticket.id)}>
-                <p className="p-2 text-red-500 text-sm cursor-pointer flex items-center gap-2">
-                  <X width={12} className="text-red-500" height={12} />
-                  Vymazať
-                </p>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+            )}
+            <DropdownMenuItem asChild onClick={() => deleteTicket(ticket.id)}>
+              <p className="p-2 text-red-500 text-sm cursor-pointer flex items-center gap-2">
+                <X width={12} className="text-red-500" height={12} />
+                Vymazať
+              </p>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
-  ];
+  });
 
   const table = useReactTable({
     data: tickets,

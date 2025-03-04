@@ -9,25 +9,16 @@ type TicketBody = {
 export async function DELETE(req: Request) {
   const session = await auth();
 
-  if (!session || !session.user?.username) {
+  if (!session || !session.user?.isAdmin) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const body = (await req.json()) as TicketBody;
 
-    const ticket = await prisma.ticket.findUniqueOrThrow({
+    await prisma.event.delete({
       where: {
         id: body.id,
-      },
-    });
-
-    if (ticket.seller !== session.user.username && !session.user.isAdmin)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    await prisma.ticket.delete({
-      where: {
-        id: ticket.id,
       },
     });
 
