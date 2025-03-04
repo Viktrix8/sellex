@@ -13,11 +13,15 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const path = nextUrl.pathname;
+      const isAdmin = auth?.user.isAdmin;
 
-      const protectedRoutes = ["/", "/sell", "/me"];
+      const protectedRoutes = ["/", "/sell", "/me", "/admin"];
       const protectedRoutePrefixes = ["/event/"];
 
       const loginPage = "/login";
+
+      const adminRoute = "/admin";
+      const isOnAdminRoute = path.startsWith("/admin");
 
       const isOnProtectedRoute =
         protectedRoutes.includes(path) ||
@@ -27,6 +31,8 @@ export const authConfig = {
 
       if (isLoggedIn) {
         if (isOnLoginPage) {
+          return Response.redirect(new URL("/", nextUrl));
+        } else if (isOnAdminRoute && !isAdmin) {
           return Response.redirect(new URL("/", nextUrl));
         }
         return true;
@@ -40,12 +46,16 @@ export const authConfig = {
     async session({ session, token }) {
       if (session.user) {
         session.user.username = token.username as string;
+        session.user.isAdmin = token.isAdmin;
       }
       return session;
     },
     async jwt({ token, profile }) {
       if (profile) {
         token.username = profile.username;
+
+        const adminNicknames = ["viktrix8"];
+        token.isAdmin = adminNicknames.includes(token.username as string);
       }
       return token;
     },

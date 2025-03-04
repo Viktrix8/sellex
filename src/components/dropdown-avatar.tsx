@@ -52,7 +52,7 @@ export default function DropdownAvatar({ user }: Props) {
           onClick={() => signOut()}
           className="text-red-600 font-bold"
         >
-          Sign out
+          Odhlásiť sa
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
