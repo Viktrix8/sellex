@@ -1,4 +1,6 @@
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import CreateTicketForm from "@/components/create-ticket-form";
 import { prisma } from "@/lib/prisma";
 import React from "react";

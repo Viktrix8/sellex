@@ -1,4 +1,6 @@
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import CreateEventButton from "@/components/create-event-button";
 import EventsTable from "@/components/events-table";
 import TicketsTable from "@/components/tickets-table";

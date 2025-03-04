@@ -1,4 +1,6 @@
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import { auth } from "@/auth";
 import TicketsTable from "@/components/tickets-table";
 import { prisma } from "@/lib/prisma";
