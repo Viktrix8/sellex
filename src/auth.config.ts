@@ -12,18 +12,27 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnMainpage = nextUrl.pathname == "/";
-      const isOnEventPage = nextUrl.pathname.startsWith("/event");
-      const isOnLogin = nextUrl.pathname.startsWith("/login");
+      const path = nextUrl.pathname;
+
+      const protectedRoutes = ["/", "/sell"];
+      const protectedRoutePrefixes = ["/event/"];
+
+      const loginPage = "/login";
+
+      const isOnProtectedRoute =
+        protectedRoutes.includes(path) ||
+        protectedRoutePrefixes.some((prefix) => path.startsWith(prefix));
+
+      const isOnLoginPage = path.startsWith(loginPage);
 
       if (isLoggedIn) {
-        if (isOnLogin) {
+        if (isOnLoginPage) {
           return Response.redirect(new URL("/", nextUrl));
         }
         return true;
       } else {
-        if (isOnMainpage || isOnEventPage) {
-          return Response.redirect(new URL("/login", nextUrl));
+        if (isOnProtectedRoute) {
+          return Response.redirect(new URL(loginPage, nextUrl));
         }
         return true;
       }

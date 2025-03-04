@@ -19,7 +19,7 @@ export default function Navbar({}: Props) {
       </Link>
 
       <div className="flex items-center gap-x-4 text-sm">
-        <Link href="#">Predať Lístok</Link>
+        <Link href="/sell">Pridať Lístok</Link>
         <Link href="#">Moje Lístky</Link>
         <DropdownAvatar user={data.user as User} />
       </div>
