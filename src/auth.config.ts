@@ -13,6 +13,7 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnMainpage = nextUrl.pathname == "/";
+      const isOnEventPage = nextUrl.pathname.startsWith("/event");
       const isOnLogin = nextUrl.pathname.startsWith("/login");
 
       if (isLoggedIn) {
@@ -21,7 +22,7 @@ export const authConfig = {
         }
         return true;
       } else {
-        if (isOnMainpage) {
+        if (isOnMainpage || isOnEventPage) {
           return Response.redirect(new URL("/login", nextUrl));
         }
         return true;

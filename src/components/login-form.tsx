@@ -34,7 +34,10 @@ export function LoginForm({
         </CardHeader>
         <CardContent>
           <div>
-            <div className="flex flex-col gap-6">
+            <form
+              className="flex flex-col gap-6"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
@@ -43,10 +46,8 @@ export function LoginForm({
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    id="password"
-                    type="password"
-                    required
                     autoFocus
+                    required
                   />
                   {correctPassword == input ? (
                     <CheckCircle className="text-green-500" />
@@ -64,7 +65,7 @@ export function LoginForm({
                   Login with Discord
                 </Button>
               </div>
-            </div>
+            </form>
             <div className="mt-4 text-center text-sm">
               Pripoj sa k nám na{" "}
               <a

@@ -13,7 +13,7 @@ export default function Navbar({}: Props) {
   if (!data?.user) return null;
 
   return (
-    <div className="flex items-center sticky top-0 p-2 z-10 px-6 border-b">
+    <div className="flex items-center sticky top-0 p-2 z-10 px-6 border-b dark:bg-black bg-white">
       <Link href="/" prefetch className="font-bold flex-1 text-2xl">
         Sellex
       </Link>
