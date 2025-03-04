@@ -28,10 +28,12 @@ model Ticket {
   eventId Int
   event   Event @relation(fields: [eventId], references: [id])
 
-  section Int
-  row     Int
-  seat    Int
+  section Int?
+  row     Int?
+  seat    Int?
 
   price  Float
   seller String
+
+  isStanding Boolean @default(false)
 }

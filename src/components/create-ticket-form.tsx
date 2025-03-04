@@ -24,6 +24,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Switch } from "./ui/switch";
 
 type Props = {
   events: {
@@ -32,24 +33,26 @@ type Props = {
   }[];
 };
 
-const FormSchema = z.object({
-  event: z
-    .string({ required_error: "Vyber prosím event ticketu." })
-    .min(1, "Event nemôže byť prázdny."),
-  section: z
-    .string({ required_error: "Napíš prosím sekciu." })
-    .min(1, "Sekcia nemôže byť prázdna."),
-  row: z
-    .string({ required_error: "Napíš prosím radu." })
-    .min(1, "Rad nemôže byť prázdny."),
-  seat: z
-    .string({ required_error: "Napíš prosím sedadlo." })
-    .min(1, "Sedadlo nemôže byť prázdne."),
-  price: z
-    .string({ required_error: "Napíš prosím cenu." })
-    .min(1, "Cena nemôže byť prázdna.")
-    .regex(/^\d+(\.\d+)?$/, "Cena musí byť číslo."),
-});
+const FormSchema = z
+  .object({
+    event: z
+      .string({ required_error: "Vyber prosím event ticketu." })
+      .min(1, "Event nemôže byť prázdny."),
+    section: z.string({ required_error: "Napíš prosím sekciu." }).optional(),
+    row: z.string({ required_error: "Napíš prosím radu." }).optional(),
+    seat: z.string({ required_error: "Napíš prosím sedadlo." }).optional(),
+    price: z
+      .string({ required_error: "Napíš prosím cenu." })
+      .min(1, "Cena nemôže byť prázdna.")
+      .regex(/^\d+(\.\d+)?$/, "Cena musí byť číslo."),
+    type: z.boolean().default(false),
+  })
+  .refine((data) => {
+    if (!data.type) {
+      return data.section && data.row && data.seat;
+    }
+    return true;
+  }, "Sekcia, Rad a Sedadlo sú povinné pre sedenie.");
 
 export default function CreateTicketForm({ events }: Props) {
   const router = useRouter();
@@ -62,11 +65,12 @@ export default function CreateTicketForm({ events }: Props) {
       row: "",
       seat: "",
       price: "",
+      type: false,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const { event, price, seat, row, section } = data;
+    const { event, price, seat, row, section, type } = data;
 
     try {
       const res = await fetch("/api/tickets/create", {
@@ -80,6 +84,7 @@ export default function CreateTicketForm({ events }: Props) {
           row: Number(row),
           section: Number(section),
           eventId: Number(event),
+          type,
         }),
       });
 
@@ -133,46 +138,63 @@ export default function CreateTicketForm({ events }: Props) {
               />
 
               <FormField
-                name="section"
+                name="type"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sekcia</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
+                    <FormLabel>Stánie</FormLabel>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormItem>
                 )}
               />
+              {!form.watch("type") && (
+                <>
+                  <FormField
+                    name="section"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Sekcia</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                name="row"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rad</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    name="row"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Rad</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                name="seat"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sedadlo</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    name="seat"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Sedadlo</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
 
               <FormField
                 name="price"

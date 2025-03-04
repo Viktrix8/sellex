@@ -125,9 +125,24 @@ export default function TicketsTable({ data }: Props) {
 
   const columns: ColumnDef<Ticket>[] = [
     { accessorKey: "event.name", header: "Meno eventu" },
-    { accessorKey: "section", header: "Sekcia" },
-    { accessorKey: "row", header: "Rad" },
-    { accessorKey: "seat", header: "Sedadlo" },
+    {
+      accessorKey: "section",
+      header: "Sekcia",
+      cell: ({ row }) =>
+        row.original.isStanding ? "STÁNIE" : row.getValue("section") || "-",
+    },
+    {
+      accessorKey: "row",
+      header: "Rad",
+      cell: ({ row }) =>
+        row.original.isStanding ? "STÁNIE" : row.getValue("row") || "-",
+    },
+    {
+      accessorKey: "seat",
+      header: "Sedadlo",
+      cell: ({ row }) =>
+        row.original.isStanding ? "STÁNIE" : row.getValue("seat") || "-",
+    },
     {
       accessorKey: "price",
       header: () => <div className="text-right">Cena</div>,

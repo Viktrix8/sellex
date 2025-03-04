@@ -8,6 +8,7 @@ type TicketBody = {
   row: number;
   seat: number;
   price: number;
+  type: boolean;
 };
 
 export async function POST(req: Request) {
@@ -28,6 +29,7 @@ export async function POST(req: Request) {
         seat: body.seat,
         price: body.price,
         seller: session.user.username,
+        isStanding: body.type,
       },
     });
 

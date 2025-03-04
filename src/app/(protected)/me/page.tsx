@@ -20,6 +20,9 @@ export default async function Page() {
         },
       },
     },
+    orderBy: {
+      price: "asc",
+    },
   });
 
   return (

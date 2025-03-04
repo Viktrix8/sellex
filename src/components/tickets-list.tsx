@@ -24,27 +24,51 @@ type Props = {
 
 export default function TicketsList({ tickets }: Props) {
   const [sort, setSort] = React.useState<string>("asc");
+  const [sit, setSit] = React.useState<string>("sta+sit");
   const [sortedTickets, setSortedTickets] = React.useState<Ticket[]>(tickets);
 
   React.useEffect(() => {
-    if (sort == "desc")
-      setSortedTickets((prev) => prev.sort((a, b) => a.price - b.price));
-    else setSortedTickets((prev) => prev.sort((a, b) => b.price - a.price));
-  }, [sort, tickets]);
+    let filteredTickets = tickets.filter((ticket) => {
+      if (sit === "sit") return !ticket.isStanding;
+      if (sit === "sta") return ticket.isStanding;
+      return true;
+    });
+
+    filteredTickets = filteredTickets.sort((a, b) =>
+      sort === "asc" ? a.price - b.price : b.price - a.price
+    );
+
+    setSortedTickets(filteredTickets);
+  }, [sort, sit, tickets]);
 
   return (
     <div>
-      <Select onValueChange={(value) => setSort(value)} defaultValue={sort}>
-        <SelectTrigger>
-          <SelectValue placeholder="Cena zostupne" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="desc">Cena zostupne</SelectItem>
-            <SelectItem value="asc">Cena vzostupne</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div className="flex gap-4">
+        <Select onValueChange={(value) => setSort(value)} defaultValue={sort}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="asc">Cena vzostupne</SelectItem>
+              <SelectItem value="desc">Cena zostupne</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <Select onValueChange={(value) => setSit(value)} defaultValue="sta+sit">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="sta+sit">Sedenie + Stánie</SelectItem>
+              <SelectItem value="sit">Iba sedenie</SelectItem>
+              <SelectItem value="sta">Iba stánie</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
       <div className="gap-4 flex flex-wrap mt-4">
         {sortedTickets.length > 0 ? (
           sortedTickets.map((ticket) => (
@@ -56,10 +80,14 @@ export default function TicketsList({ tickets }: Props) {
                 <CardTitle>
                   <span className="text-blue-500">@{ticket.seller}</span>
                 </CardTitle>
-                <CardDescription>
-                  Sekcia {ticket.section} · Rada {ticket.row} · Sedadlo{" "}
-                  {ticket.seat}
-                </CardDescription>
+                {!ticket.isStanding ? (
+                  <CardDescription>
+                    Sekcia {ticket.section} · Rada {ticket.row} · Sedadlo{" "}
+                    {ticket.seat}
+                  </CardDescription>
+                ) : (
+                  <CardDescription>STÁNIE</CardDescription>
+                )}
               </CardHeader>
               <CardContent className="text-sm">{ticket.price} EUR</CardContent>
             </Card>

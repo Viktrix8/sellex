@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sellex",
+  title: "Sellex - Predaj lístkov na koncerty",
   description: "Sellex - Predaj Listkov",
 };
 
