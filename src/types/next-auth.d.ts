@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 
-module "next-auth" {
-  interface Session {
+declare module "next-auth" {
+  export interface Session {
     user: User & {
       username: string;
       isAdmin: boolean;

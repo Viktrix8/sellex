@@ -5,9 +5,8 @@ import React from "react";
 import DropdownAvatar from "./dropdown-avatar";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-type Props = {};
 
-export default function Navbar({}: Props) {
+export default function Navbar() {
   const { data } = useSession();
 
   if (!data?.user) return null;

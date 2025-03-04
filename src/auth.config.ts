@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
-import { toast } from "sonner";
 
 export const authConfig = {
   providers: [
@@ -19,8 +18,6 @@ export const authConfig = {
       const protectedRoutePrefixes = ["/event/"];
 
       const loginPage = "/login";
-
-      const adminRoute = "/admin";
       const isOnAdminRoute = path.startsWith("/admin");
 
       const isOnProtectedRoute =

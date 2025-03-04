@@ -4,9 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import React from "react";
 
-type Props = {};
-
-export default async function Page({}: Props) {
+export default async function Page() {
   const session = await auth();
 
   if (!session?.user?.username) return notFound();

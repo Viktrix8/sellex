@@ -34,9 +34,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./ui/dialog";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import {
   Form,
@@ -94,6 +92,7 @@ export default function TicketsTable({ data }: Props) {
       toast.success("Lístok úspešne upravený.");
       window.location.reload();
     } catch (error) {
+      console.log(error);
       toast.error("Bol problém s upravovaním lístka.");
     }
   };
@@ -114,6 +113,7 @@ export default function TicketsTable({ data }: Props) {
 
       toast.success("Lístok úspešne vymazaný.");
     } catch (error) {
+      console.log(error);
       toast.error("Bol problém s vymazávaním lístka.");
     }
   };
@@ -121,11 +121,6 @@ export default function TicketsTable({ data }: Props) {
   const openDialog = (ticket: Ticket) => {
     setSelectedTicket(ticket);
     setIsDialogOpen(true);
-  };
-
-  const closeDialog = () => {
-    setIsDialogOpen(false);
-    setSelectedTicket(null);
   };
 
   const columns: ColumnDef<Ticket>[] = [
