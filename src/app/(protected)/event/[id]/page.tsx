@@ -6,7 +6,7 @@ import { differenceInDays } from "date-fns";
 
 type Props = {
   params: {
-    id: string;
+    id: Promise<any>;
   };
 };
 
