@@ -4,13 +4,11 @@ import { notFound } from "next/navigation";
 import React from "react";
 import { differenceInDays } from "date-fns";
 
-type Props = {
-  params: {
-    id: Promise<any>;
-  };
-};
-
-export default async function Page({ params }: Props) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const event = await prisma.event.findUnique({
     where: {
