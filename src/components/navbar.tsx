@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import DropdownAvatar from "./dropdown-avatar";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 type Props = {};
 
 export default function Navbar({}: Props) {
@@ -12,7 +13,18 @@ export default function Navbar({}: Props) {
   if (!data?.user) return null;
   return (
     <div className="flex items-center sticky top-0 p-2 z-10 px-6 border-b dark:bg-black bg-white">
-      <Link href="/" prefetch className="font-bold flex-1 text-2xl">
+      <Link
+        href="/"
+        prefetch
+        className="font-bold flex-1 text-2xl flex items-center gap-2"
+      >
+        <Image
+          src="/logo.png"
+          className="rounded-md"
+          width={35}
+          height={35}
+          alt="logo"
+        />
         Sellex
       </Link>
 
