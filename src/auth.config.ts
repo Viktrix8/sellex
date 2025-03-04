@@ -51,7 +51,7 @@ export const authConfig = {
       if (profile) {
         token.username = profile.username;
 
-        const adminNicknames = ["viktrix8", "ovosk"];
+        const adminNicknames = ["viktrix8", "ovosk", "kristian2525"];
         token.isAdmin = adminNicknames.includes(token.username as string);
       }
       return token;
