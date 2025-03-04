@@ -4,7 +4,6 @@ import Link from "next/link";
 import React from "react";
 import DropdownAvatar from "./dropdown-avatar";
 import { useSession } from "next-auth/react";
-import { User } from "@/types/next-auth";
 type Props = {};
 
 export default function Navbar({}: Props) {
@@ -20,8 +19,8 @@ export default function Navbar({}: Props) {
 
       <div className="flex items-center gap-x-4 text-sm">
         <Link href="/sell">Pridať Lístok</Link>
-        <Link href="#">Moje Lístky</Link>
-        <DropdownAvatar user={data.user as User} />
+        <Link href="/me">Moje Lístky</Link>
+        <DropdownAvatar user={data.user} />
       </div>
     </div>
   );

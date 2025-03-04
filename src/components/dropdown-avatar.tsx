@@ -9,8 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useTheme } from "next-themes";
-import { User } from "@/types/next-auth";
 import { signOut } from "next-auth/react";
+
+export type User = {
+  username: string;
+  image: string;
+  email: string;
+};
 
 type Props = {
   user: User;
@@ -32,7 +37,7 @@ export default function DropdownAvatar({ user }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel className="font-bold">
-          @{user.name}
+          @{user.username}
         </DropdownMenuLabel>
         <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />

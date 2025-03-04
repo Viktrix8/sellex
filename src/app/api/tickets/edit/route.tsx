@@ -3,11 +3,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 type TicketBody = {
-  eventId: number;
-  section: number;
-  row: number;
-  seat: number;
-  price: number;
+  id: number;
+  price: string;
 };
 
 export async function POST(req: Request) {
@@ -20,14 +17,21 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json()) as TicketBody;
 
-    const newTicket = await prisma.ticket.create({
+    const ticket = await prisma.ticket.findUniqueOrThrow({
+      where: {
+        id: body.id,
+      },
+    });
+
+    if (ticket.seller !== session.user.username)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const newTicket = await prisma.ticket.update({
+      where: {
+        id: body.id,
+      },
       data: {
-        eventId: body.eventId,
-        section: body.section,
-        row: body.row,
-        seat: body.seat,
-        price: body.price,
-        seller: session.user.username,
+        price: Number(body.price),
       },
     });
 

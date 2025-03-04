@@ -14,7 +14,7 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const path = nextUrl.pathname;
 
-      const protectedRoutes = ["/", "/sell"];
+      const protectedRoutes = ["/", "/sell", "/me"];
       const protectedRoutePrefixes = ["/event/"];
 
       const loginPage = "/login";
@@ -36,6 +36,18 @@ export const authConfig = {
         }
         return true;
       }
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.username = token.username as string;
+      }
+      return session;
+    },
+    async jwt({ token, profile }) {
+      if (profile) {
+        token.username = profile.username;
+      }
+      return token;
     },
   },
   pages: {

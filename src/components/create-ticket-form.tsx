@@ -22,7 +22,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { prisma } from "@/lib/prisma";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -88,7 +87,7 @@ export default function CreateTicketForm({ events }: Props) {
 
       form.reset();
       toast.success("Ticket úspešne vytvorený.");
-      router.push(`/event/${event}`);
+      router.push("/me");
     } catch (error) {
       toast.error("Bol problém s vytvorením ticketu.");
       console.log(error);

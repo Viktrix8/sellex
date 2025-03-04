@@ -1,7 +1,9 @@
-import { User } from "next-auth";
+import NextAuth from "next-auth";
 
-export interface User {
-  name: string;
-  email: string;
-  image: string;
+module "next-auth" {
+  interface Session {
+    user: User & {
+      username: string;
+    };
+  }
 }
