@@ -27,7 +27,7 @@ export default async function Page({
             row: "asc",
           },
           {
-            seat: "asc",
+            seatFrom: "asc",
           },
           {
             price: "asc",

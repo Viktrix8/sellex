@@ -146,10 +146,16 @@ export default function TicketsTable({
         row.original.isStanding ? "-" : row.getValue("row") || "-",
     },
     {
-      accessorKey: "seat",
-      header: "Sedadlo",
+      accessorKey: "seatFrom",
+      header: "Sedadlo od",
       cell: ({ row }) =>
-        row.original.isStanding ? "-" : row.getValue("seat") || "-",
+        row.original.isStanding ? "-" : row.getValue("seatFrom") || "-",
+    },
+    {
+      accessorKey: "seatTo",
+      header: "Sedadlo do",
+      cell: ({ row }) =>
+        row.original.isStanding ? "-" : row.getValue("seatTo") || "-",
     },
     {
       accessorKey: "count",

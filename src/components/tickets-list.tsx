@@ -81,14 +81,30 @@ export default function TicketsList({ tickets }: Props) {
                   <span className="text-blue-500">@{ticket.seller}</span>
                 </CardTitle>
                 {!ticket.isStanding ? (
-                  <CardDescription>
-                    Sekcia {ticket.section} · Rada {ticket.row} · Sedadlo{" "}
-                    {ticket.seat}
-                  </CardDescription>
+                  <>
+                    <CardDescription>
+                      Sekcia {ticket.section} · Rada {ticket.row}
+                    </CardDescription>
+                    <CardDescription>
+                      Sedadlo{" "}
+                      {ticket.seatFrom !== undefined &&
+                        ticket.seatTo !== undefined &&
+                        Array.from(
+                          { length: ticket.seatTo! - ticket.seatFrom! + 1 },
+                          (_, index) => ticket.seatFrom! + index
+                        ).map((seatNumber, index, arr) => (
+                          <span key={seatNumber}>
+                            {seatNumber}
+                            {index < arr.length - 1 ? ", " : ""}
+                          </span>
+                        ))}
+                    </CardDescription>
+                  </>
                 ) : (
-                  <CardDescription>
-                    {ticket.note} · {ticket.count} ks{" "}
-                  </CardDescription>
+                  <>
+                    <CardDescription>{ticket.note}</CardDescription>
+                    <CardDescription>{ticket.count} ks </CardDescription>
+                  </>
                 )}
               </CardHeader>
               <CardContent className="text-sm">{ticket.price} EUR</CardContent>

@@ -31,23 +31,19 @@ export async function POST(req: Request) {
       );
     }
 
-    const ticketsData = [];
-    for (let seat = body.seatFrom; seat <= body.seatTo; seat++) {
-      ticketsData.push({
+    const newTickets = await prisma.ticket.create({
+      data: {
         eventId: body.eventId,
         section: body.section,
         row: body.row,
-        seat: seat,
+        seatFrom: body.seatFrom,
+        seatTo: body.seatTo,
         price: body.price,
         seller: session.user.username,
         isStanding: body.type,
         note: body.note,
         count: body.count,
-      });
-    }
-
-    const newTickets = await prisma.ticket.createMany({
-      data: ticketsData,
+      },
     });
 
     return NextResponse.json(newTickets);
