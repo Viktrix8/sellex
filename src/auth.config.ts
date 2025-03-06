@@ -6,6 +6,8 @@ export const authConfig = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISORD_CLIENT_SECRET,
+      authorization:
+        "https://discord.com/api/oauth2/authorize?scope=identify+email+guilds",
     }),
   ],
   callbacks: {
@@ -52,9 +54,19 @@ export const authConfig = {
       if (isLoggedIn) {
         if (isOnLoginPage) {
           return Response.redirect(new URL("/", nextUrl));
-        } else if (isOnAdminRoute && !isAdmin) {
+        }
+
+        if (isOnAdminRoute && !isAdmin) {
           return Response.redirect(new URL("/", nextUrl));
         }
+
+        if (
+          (path.startsWith("/sell") || path.startsWith("/me")) &&
+          !auth.user.isMember
+        ) {
+          return Response.redirect(new URL("/", nextUrl));
+        }
+
         return true;
       } else {
         if (isOnProtectedRoute) {
@@ -63,21 +75,43 @@ export const authConfig = {
         return true;
       }
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.username = token.username as string;
-        session.user.isAdmin = token.isAdmin;
-      }
-      return session;
-    },
-    async jwt({ token, profile }) {
+    async jwt({ token, profile, account }) {
       if (profile) {
         token.username = profile.username;
-
         const adminNicknames = ["viktrix8", "ovosk", "kristian2525"];
         token.isAdmin = adminNicknames.includes(token.username as string);
       }
+
+      if (account?.access_token) {
+        try {
+          const res = await fetch("https://discord.com/api/users/@me/guilds", {
+            headers: {
+              Authorization: `Bearer ${account.access_token}`,
+            },
+          });
+          if (res.ok) {
+            const guilds = await res.json();
+            const targetGuildId = "1078243458499756032";
+            token.isMember = guilds.some(
+              (guild: any) => guild.id === targetGuildId
+            );
+          } else {
+            token.isMember = false;
+          }
+        } catch (error) {
+          console.error("Error fetching guilds:", error);
+          token.isMember = false;
+        }
+      }
       return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.username = token.username;
+        session.user.isAdmin = token.isAdmin;
+        session.user.isMember = token.isMember;
+      }
+      return session;
     },
   },
   pages: {

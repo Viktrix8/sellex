@@ -16,8 +16,7 @@ type TicketBody = {
 
 export async function POST(req: Request) {
   const session = await auth();
-
-  if (!session || !session.user?.username) {
+  if (!session || !session.user?.username || !session.user.isMember) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

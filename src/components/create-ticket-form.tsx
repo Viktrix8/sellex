@@ -75,7 +75,6 @@ const FormSchema = z
     return true;
   }, "Sekcia, Rad a Sedadlo sú povinné pre sedenie.")
   .refine((data) => {
-    console.log(data);
     if (data.type) {
       return data.note && data.count;
     }
@@ -186,7 +185,13 @@ export default function CreateTicketForm({ events }: Props) {
                     <FormLabel>Stánie</FormLabel>
                     <Switch
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={(e) => {
+                        form.resetField("row");
+                        form.resetField("section");
+                        form.resetField("seatFrom");
+                        form.resetField("seatTo");
+                        field.onChange(e);
+                      }}
                     />
                   </FormItem>
                 )}

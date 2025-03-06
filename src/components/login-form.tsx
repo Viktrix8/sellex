@@ -9,9 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CheckCircle, XCircle } from "lucide-react";
 import React from "react";
 import { signIn } from "next-auth/react";
 
@@ -19,10 +16,6 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [input, setInput] = React.useState<string>("");
-
-  const correctPassword = process.env.NEXT_PUBLIC_PASSWORD;
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -38,30 +31,8 @@ export function LoginForm({
               className="flex flex-col gap-6"
               onSubmit={(e) => e.preventDefault()}
             >
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    autoFocus
-                    required
-                  />
-                  {correctPassword == input ? (
-                    <CheckCircle className="text-green-500" />
-                  ) : (
-                    <XCircle className="text-red-500" />
-                  )}
-                </div>
-              </div>
               <div className="flex flex-col gap-3">
-                <Button
-                  disabled={input !== correctPassword}
-                  onClick={() => signIn("discord")}
-                  className="w-full"
-                >
+                <Button onClick={() => signIn("discord")} className="w-full">
                   Login with Discord
                 </Button>
               </div>

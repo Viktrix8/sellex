@@ -28,8 +28,12 @@ export default function Navbar() {
       </Link>
 
       <div className="flex items-center gap-x-4 text-sm">
-        <Link href="/sell">Pridať Lístok</Link>
-        <Link href="/me">Moje Lístky</Link>
+        {data.user.isMember && (
+          <>
+            <Link href="/sell">Pridať Lístok</Link>
+            <Link href="/me">Moje Lístky</Link>
+          </>
+        )}
         {data.user.isAdmin && <Link href="/admin">Admin</Link>}
         <DropdownAvatar user={data.user} />
       </div>
