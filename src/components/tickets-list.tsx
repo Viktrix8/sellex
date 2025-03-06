@@ -83,7 +83,7 @@ export default function TicketsList({ tickets }: Props) {
                 {!ticket.isStanding ? (
                   <CardDescription>
                     Sekcia {ticket.section} · Rada {ticket.row} · Sedadlo{" "}
-                    {ticket.seat}
+                    {/* {ticket.seat} */}
                   </CardDescription>
                 ) : (
                   <CardDescription>
