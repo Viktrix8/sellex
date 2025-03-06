@@ -93,7 +93,7 @@ export const authConfig = {
             const guilds = await res.json();
             const targetGuildId = "1078243458499756032";
             token.isMember = guilds.some(
-              (guild: any) => guild.id === targetGuildId
+              (guild: { id: string }) => guild.id === targetGuildId
             );
           } else {
             token.isMember = false;
