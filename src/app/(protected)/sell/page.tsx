@@ -10,6 +10,7 @@ export default async function Page() {
     select: {
       id: true,
       name: true,
+      date: true,
     },
   });
 

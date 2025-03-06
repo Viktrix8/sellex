@@ -62,7 +62,7 @@ export default function EventsList({ events }: Props) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm">
-                  {new Date(event.date).toLocaleDateString()}
+                  {new Date(event.date).toLocaleDateString("sk-sk")}
                 </CardContent>
               </Card>
             </Link>

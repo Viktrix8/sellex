@@ -22,7 +22,14 @@ export async function POST(req: Request) {
 
   try {
     const body = (await req.json()) as TicketBody;
-
+    console.log(
+      body.section,
+      typeof body.section,
+      body.row,
+      typeof body.row,
+      body.seat,
+      typeof body.seat
+    );
     const newTicket = await prisma.ticket.create({
       data: {
         eventId: body.eventId,

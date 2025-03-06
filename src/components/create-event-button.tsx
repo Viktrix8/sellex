@@ -51,7 +51,9 @@ export default function CreateEventButton() {
     const { date, name } = data;
 
     const [day, month, year] = date.split("/").map(Number);
-    const newDate = new Date(year, month - 1, day);
+    const newDate = new Date(Date.UTC(year, month - 1, day));
+
+    const isoDateTime = newDate.toISOString();
 
     try {
       const res = await fetch("/api/events/create", {
@@ -61,7 +63,7 @@ export default function CreateEventButton() {
         },
         body: JSON.stringify({
           name,
-          date: newDate,
+          date: isoDateTime,
         }),
       });
 

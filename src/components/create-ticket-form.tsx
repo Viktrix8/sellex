@@ -30,6 +30,7 @@ type Props = {
   events: {
     id: number;
     name: string;
+    date: Date;
   }[];
 };
 
@@ -147,8 +148,15 @@ export default function CreateTicketForm({ events }: Props) {
                       </SelectTrigger>
                       <SelectContent>
                         {events.map((event) => (
-                          <SelectItem value={`${event.id}`} key={event.id}>
-                            {event.name}
+                          <SelectItem
+                            value={`${event.id}`}
+                            key={event.id}
+                            className="font-bold"
+                          >
+                            {event.name} ·
+                            <span className="font-normal">
+                              {new Date(event.date).toLocaleDateString("sk-sk")}
+                            </span>
                           </SelectItem>
                         ))}
                       </SelectContent>

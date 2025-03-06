@@ -44,7 +44,7 @@ export default async function Page({
       <div className="text-center">
         <h2 className="text-4xl font-bold mt-8">{event.name}</h2>
         <p className="text-xl text-muted-foreground">
-          {new Date(event.date).toLocaleDateString()} -{" "}
+          {new Date(event.date).toLocaleDateString("sk-sk")} -{" "}
           {differenceInDays(new Date(event.date), new Date()) + 1} dní do
           začiatku
         </p>
