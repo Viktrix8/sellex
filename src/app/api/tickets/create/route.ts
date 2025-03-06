@@ -24,22 +24,33 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json()) as TicketBody;
 
-    const newTicket = await prisma.ticket.create({
-      data: {
+    if (body.seatFrom > body.seatTo) {
+      return NextResponse.json(
+        { error: "Invalid seat range" },
+        { status: 400 }
+      );
+    }
+
+    const ticketsData = [];
+    for (let seat = body.seatFrom; seat <= body.seatTo; seat++) {
+      ticketsData.push({
         eventId: body.eventId,
         section: body.section,
         row: body.row,
-        seatFrom: body.seatFrom,
-        seatTo: body.seatTo,
+        seat: seat,
         price: body.price,
         seller: session.user.username,
         isStanding: body.type,
         note: body.note,
         count: body.count,
-      },
+      });
+    }
+
+    const newTickets = await prisma.ticket.createMany({
+      data: ticketsData,
     });
 
-    return NextResponse.json(newTicket);
+    return NextResponse.json(newTickets);
   } catch (error) {
     console.log(error);
     return NextResponse.json(

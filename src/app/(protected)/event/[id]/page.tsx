@@ -21,16 +21,16 @@ export default async function Page({
       tickets: {
         orderBy: [
           {
-            price: "asc",
-          },
-          {
             section: "asc",
           },
           {
             row: "asc",
           },
           {
-            seatFrom: "asc",
+            seat: "asc",
+          },
+          {
+            price: "asc",
           },
         ],
       },

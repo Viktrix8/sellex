@@ -30,8 +30,7 @@ model Ticket {
   section Int?
   row     Int?
 
-  seatFrom Int?
-  seatTo   Int?
+  seat Int?
 
   price  Float
   seller String
