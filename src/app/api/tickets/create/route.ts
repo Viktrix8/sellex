@@ -6,7 +6,8 @@ type TicketBody = {
   eventId: number;
   section: number;
   row: number;
-  seat: number;
+  seatFrom: number;
+  seatTo: number;
   price: number;
   type: boolean;
   note: string | null;
@@ -22,20 +23,14 @@ export async function POST(req: Request) {
 
   try {
     const body = (await req.json()) as TicketBody;
-    console.log(
-      body.section,
-      typeof body.section,
-      body.row,
-      typeof body.row,
-      body.seat,
-      typeof body.seat
-    );
+
     const newTicket = await prisma.ticket.create({
       data: {
         eventId: body.eventId,
         section: body.section,
         row: body.row,
-        seat: body.seat,
+        seatFrom: body.seatFrom,
+        seatTo: body.seatTo,
         price: body.price,
         seller: session.user.username,
         isStanding: body.type,

@@ -39,9 +39,18 @@ const FormSchema = z
     event: z
       .string({ required_error: "Vyber prosím event ticketu." })
       .min(1, "Event nemôže byť prázdny."),
-    section: z.string().optional(),
-    row: z.string().optional(),
-    seat: z.string().optional(),
+    section: z.string().optional().or(z.literal("")),
+    row: z.string().optional().or(z.literal("")),
+    seatFrom: z
+      .string({ required_error: "Napíš prosím sedadlo od." })
+      .regex(/^\d+(\.\d+)?$/, "Sedadlo od musí byť číslo.")
+      .optional()
+      .or(z.literal("")),
+    seatTo: z
+      .string({ required_error: "Napíš prosím sedadlo do." })
+      .regex(/^\d+(\.\d+)?$/, "Sedadlo od musí byť číslo.")
+      .optional()
+      .or(z.literal("")),
     price: z
       .string({ required_error: "Napíš prosím cenu." })
       .min(1, "Cena nemôže byť prázdna.")
@@ -61,11 +70,12 @@ const FormSchema = z
   })
   .refine((data) => {
     if (!data.type) {
-      return data.section && data.row && data.seat;
+      return data.section && data.row && data.seatFrom && data.seatTo;
     }
     return true;
   }, "Sekcia, Rad a Sedadlo sú povinné pre sedenie.")
   .refine((data) => {
+    console.log(data);
     if (data.type) {
       return data.note && data.count;
     }
@@ -81,17 +91,18 @@ export default function CreateTicketForm({ events }: Props) {
       event: "",
       section: "",
       row: "",
-      seat: "",
       price: "",
       type: false,
       note: "",
       count: "",
+      seatFrom: "",
+      seatTo: "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const { event, price, seat, row, section, type, note, count } = data;
-
+    const { event, price, seatFrom, seatTo, row, section, type, note, count } =
+      data;
     try {
       const res = await fetch("/api/tickets/create", {
         method: "POST",
@@ -100,7 +111,8 @@ export default function CreateTicketForm({ events }: Props) {
         },
         body: JSON.stringify({
           price: Number(price),
-          seat: Number(seat),
+          seatFrom: Number(seatFrom),
+          seatTo: Number(seatTo),
           row: Number(row),
           section: Number(section),
           eventId: Number(event),
@@ -235,11 +247,25 @@ export default function CreateTicketForm({ events }: Props) {
                   />
 
                   <FormField
-                    name="seat"
+                    name="seatFrom"
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sedadlo</FormLabel>
+                        <FormLabel>Sedadlo od</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="seatTo"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Sedadlo do (vrátane)</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>

@@ -26,6 +26,29 @@ export const authConfig = {
 
       const isOnLoginPage = path.startsWith(loginPage);
 
+      const isMaintenanceMode = process.env.MAINTENANCE_MODE === "true";
+      const isOnMaintenancePage = path.startsWith("/maintenance");
+
+      const isAllowedDuringMaintenance =
+        isOnMaintenancePage ||
+        path.startsWith("/api") ||
+        path.startsWith("/_next") ||
+        path.startsWith("/static") ||
+        path.endsWith(".js") ||
+        path.endsWith(".css") ||
+        path.endsWith(".ico") ||
+        path.endsWith(".png") ||
+        path.endsWith(".jpg") ||
+        path.endsWith(".svg");
+
+      if (isMaintenanceMode && !isAllowedDuringMaintenance) {
+        return Response.redirect(new URL("/maintenance", nextUrl));
+      }
+
+      if (!isMaintenanceMode && isOnMaintenancePage) {
+        return Response.redirect(new URL("/", nextUrl));
+      }
+
       if (isLoggedIn) {
         if (isOnLoginPage) {
           return Response.redirect(new URL("/", nextUrl));
