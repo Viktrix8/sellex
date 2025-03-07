@@ -29,13 +29,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
-     crossorigin="anonymous"></script>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
+        crossOrigin="anonymous"
+      ></script>
       <Analytics />
       <SpeedInsights />
-      <body
-        className={cn(geistSans.variable, geistMono.variable, "antialiased")}
-      >
+      <body className={cn(geistSans.variable, geistMono.variable, "antialiased")}>
         <Providers>
           {children}
           <Toaster />
