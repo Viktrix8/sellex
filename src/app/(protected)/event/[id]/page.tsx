@@ -6,12 +6,14 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import React from "react";
 import { differenceInDays } from "date-fns";
+import { auth } from "@/auth";
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const session = await auth();
   const { id } = await params;
   const event = await prisma.event.findUnique({
     where: {
@@ -53,7 +55,7 @@ export default async function Page({
         Dostupné lístky - {event.tickets.length}
       </h2>
       <hr className="my-4" />
-      <TicketsList tickets={event.tickets} />
+      <TicketsList isMember={session!.user.isMember} tickets={event.tickets} />
     </div>
   );
 }

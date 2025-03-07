@@ -20,9 +20,10 @@ import {
 
 type Props = {
   tickets: Ticket[];
+  isMember: boolean;
 };
 
-export default function TicketsList({ tickets }: Props) {
+export default function TicketsList({ tickets, isMember }: Props) {
   const [sort, setSort] = React.useState<string>("asc");
   const [sit, setSit] = React.useState<string>("sta+sit");
   const [sortedTickets, setSortedTickets] = React.useState<Ticket[]>(tickets);
@@ -85,20 +86,22 @@ export default function TicketsList({ tickets }: Props) {
                     <CardDescription>
                       Sekcia {ticket.section} · Rada {ticket.row}
                     </CardDescription>
-                    <CardDescription>
-                      Sedadlo{" "}
-                      {ticket.seatFrom !== undefined &&
-                        ticket.seatTo !== undefined &&
-                        Array.from(
-                          { length: ticket.seatTo! - ticket.seatFrom! + 1 },
-                          (_, index) => ticket.seatFrom! + index
-                        ).map((seatNumber, index, arr) => (
-                          <span key={seatNumber}>
-                            {seatNumber}
-                            {index < arr.length - 1 ? ", " : ""}
-                          </span>
-                        ))}
-                    </CardDescription>
+                    {isMember && (
+                      <CardDescription>
+                        Sedadlo{" "}
+                        {ticket.seatFrom !== undefined &&
+                          ticket.seatTo !== undefined &&
+                          Array.from(
+                            { length: ticket.seatTo! - ticket.seatFrom! + 1 },
+                            (_, index) => ticket.seatFrom! + index
+                          ).map((seatNumber, index, arr) => (
+                            <span key={seatNumber}>
+                              {seatNumber}
+                              {index < arr.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                      </CardDescription>
+                    )}
                   </>
                 ) : (
                   <>
