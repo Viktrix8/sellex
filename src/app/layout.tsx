@@ -30,8 +30,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
-     crossOrigin="anonymous"></Script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
+     crossorigin="anonymous"></script>
       <Analytics />
       <SpeedInsights />
       <body
