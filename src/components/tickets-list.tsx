@@ -86,7 +86,7 @@ export default function TicketsList({ tickets, isMember }: Props) {
                     <CardDescription>
                       Sekcia {ticket.section} · Rada {ticket.row}
                     </CardDescription>
-                    {isMember && (
+                    {isMember ? (
                       <CardDescription>
                         Sedadlo{" "}
                         {ticket.seatFrom !== undefined &&
@@ -100,6 +100,10 @@ export default function TicketsList({ tickets, isMember }: Props) {
                               {index < arr.length - 1 ? ", " : ""}
                             </span>
                           ))}
+                      </CardDescription>
+                    ) : (
+                      <CardDescription>
+                        {ticket.seatTo! - ticket.seatFrom! + 1} ks pri sebe
                       </CardDescription>
                     )}
                   </>
