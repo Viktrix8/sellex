@@ -50,9 +50,6 @@ export async function POST(req: Request) {
       "https://discord.com/api/webhooks/1347955350195929088/8bOudKDzusU5LQVPllbs236I4UZVCWPhCCi6pDJvoJ9zG1YH0NXSg0zZESO5H091BJ5T",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           embeds: [
             {
