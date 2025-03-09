@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const newTickets = await prisma.ticket.create({
+    const newTicket = await prisma.ticket.create({
       data: {
         eventId: body.eventId,
         section: body.section,
@@ -43,9 +43,43 @@ export async function POST(req: Request) {
         note: body.note,
         count: body.count,
       },
+      include: { event: true },
     });
 
-    return NextResponse.json(newTickets);
+    await fetch(
+      "https://discord.com/api/webhooks/1347955350195929088/8bOudKDzusU5LQVPllbs236I4UZVCWPhCCi6pDJvoJ9zG1YH0NXSg0zZESO5H091BJ5T",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          embeds: [
+            {
+              id: 652627557,
+              title: "Nový lístok na predaj",
+              description: `👤 Meno: <@${session.user.id}>\n🎤 Akcia: ${
+                newTicket.event.name
+              }\n🎫 Typ lístka: ${
+                newTicket.isStanding ? "Stánie" : "Sedenie"
+              }\n ${
+                !newTicket.isStanding ? `🪑 Sekcia: ${newTicket.section}\n` : ""
+              }\nPočet kusov: ${
+                newTicket.isStanding
+                  ? `${newTicket.count} ks`
+                  : `${
+                      newTicket.seatTo! - newTicket.seatFrom! + 1
+                    } ks (pri sebe)`
+              }\nCena: ${newTicket.price}€`,
+              color: 2326507,
+              fields: [],
+            },
+          ],
+        }),
+      }
+    );
+
+    return NextResponse.json(newTicket);
   } catch (error) {
     console.log(error);
     return NextResponse.json(

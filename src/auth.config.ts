@@ -15,22 +15,16 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const path = nextUrl.pathname;
       const isAdmin = auth?.user.isAdmin;
-
       const protectedRoutes = ["/", "/sell", "/me", "/admin"];
       const protectedRoutePrefixes = ["/event/"];
-
       const loginPage = "/login";
       const isOnAdminRoute = path.startsWith("/admin");
-
       const isOnProtectedRoute =
         protectedRoutes.includes(path) ||
         protectedRoutePrefixes.some((prefix) => path.startsWith(prefix));
-
       const isOnLoginPage = path.startsWith(loginPage);
-
       const isMaintenanceMode = process.env.MAINTENANCE_MODE === "true";
       const isOnMaintenancePage = path.startsWith("/maintenance");
-
       const isAllowedDuringMaintenance =
         isOnMaintenancePage ||
         path.startsWith("/api") ||
@@ -42,31 +36,25 @@ export const authConfig = {
         path.endsWith(".png") ||
         path.endsWith(".jpg") ||
         path.endsWith(".svg");
-
       if (isMaintenanceMode && !isAllowedDuringMaintenance) {
         return Response.redirect(new URL("/maintenance", nextUrl));
       }
-
       if (!isMaintenanceMode && isOnMaintenancePage) {
         return Response.redirect(new URL("/", nextUrl));
       }
-
       if (isLoggedIn) {
         if (isOnLoginPage) {
           return Response.redirect(new URL("/", nextUrl));
         }
-
         if (isOnAdminRoute && !isAdmin) {
           return Response.redirect(new URL("/", nextUrl));
         }
-
         if (
           (path.startsWith("/sell") || path.startsWith("/me")) &&
           !auth.user.isMember
         ) {
           return Response.redirect(new URL("/", nextUrl));
         }
-
         return true;
       } else {
         if (isOnProtectedRoute) {
@@ -78,10 +66,10 @@ export const authConfig = {
     async jwt({ token, profile, account }) {
       if (profile) {
         token.username = profile.username;
+        token.id = profile.id;
         const adminNicknames = ["viktrix8", "ovosk", "kristian2525"];
         token.isAdmin = adminNicknames.includes(token.username as string);
       }
-
       if (account?.access_token) {
         try {
           const res = await fetch("https://discord.com/api/users/@me/guilds", {
@@ -110,6 +98,7 @@ export const authConfig = {
         session.user.username = token.username;
         session.user.isAdmin = token.isAdmin;
         session.user.isMember = token.isMember;
+        session.user.id = token.id;
       }
       return session;
     },
