@@ -71,7 +71,7 @@ export async function POST(req: Request) {
                       newTicket.seatTo! - newTicket.seatFrom! + 1
                     } ks (pri sebe)`
               }\nCena: ${newTicket.price}€`,
-              color: 2326507,
+              color: 15105570,
               fields: [],
             },
           ],
