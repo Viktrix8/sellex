@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 
 type TicketBody = {
   eventId: number;
-  section: number;
+  section: string;
   row: number;
   seatFrom: number;
   seatTo: number;

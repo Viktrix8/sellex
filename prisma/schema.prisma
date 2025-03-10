@@ -27,7 +27,7 @@ model Ticket {
   eventId Int
   event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  section Int?
+  section String?
   row     Int?
 
   seatFrom Int?

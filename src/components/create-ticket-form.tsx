@@ -113,7 +113,7 @@ export default function CreateTicketForm({ events }: Props) {
           seatFrom: Number(seatFrom),
           seatTo: Number(seatTo),
           row: Number(row),
-          section: Number(section),
+          section: section,
           eventId: Number(event),
           type,
           note,
