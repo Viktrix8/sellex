@@ -61,7 +61,7 @@ export async function POST(req: Request) {
               description: `👤 Meno: <@${session.user.id}>\n🎤 Akcia: ${
                 newTicket.event.name
               }\n🎫 Typ lístka: ${
-                newTicket.isStanding ? "Stánie" : "Sedenie"
+                newTicket.isStanding ? newTicket.note : "Sedenie"
               }\n ${
                 !newTicket.isStanding ? `🪑 Sekcia: ${newTicket.section}\n` : ""
               }\nPočet kusov: ${
