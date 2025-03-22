@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +30,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
+        crossOrigin="anonymous"
+      ></Script>
       <Analytics />
       <SpeedInsights />
-      <body
-        className={cn(geistSans.variable, geistMono.variable, "antialiased")}
-      >
+      <body className={cn(geistSans.variable, geistMono.variable, "antialiased")}>
         <Providers>
           {children}
           <Toaster />
