@@ -11,13 +11,11 @@ type Props = {
 export default function Layout({ children }: Props) {
   return (
     <>
-      <Head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
-          crossOrigin="anonymous"
-        ></Script>
-      </Head>
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8435095568140595"
+        crossOrigin="anonymous"
+      ></Script>
       <Navbar />
       <div className="container mx-auto p-4">{children}</div>
       <FooterSection />
