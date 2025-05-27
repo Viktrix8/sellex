@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { Content } from "next/font/google";
 
 type TicketBody = {
   eventId: number;
@@ -43,7 +44,22 @@ export async function POST(req: Request) {
         note: body.note,
         count: body.count,
       },
+      include:{event:true}
     });
+    fetch("https://discord.com/api/webhooks/1347955350195929088/8bOudKDzusU5LQVPllbs236I4UZVCWPhCCi6pDJvoJ9zG1YH0NXSg0zZESO5H091BJ5T",{
+      method:"POST",
+      body: JSON.stringify({"content": "",
+  "tts": false,
+  "embeds": [
+    {
+      "id": 652627557,
+      "title": "Nový Lístok",
+      "description": `👤 Meno @${session.user.username}\n\🎤 Akcia ${newTickets.event.name}\n\🎫 Typ lístka ${newTickets.isStanding ? "Stánie" :"Sedenie"}\n\ ${newTickets.section &&`Sekcia ${newTickets.section}`}`,
+      "color": 2326507,
+      "fields": []
+    }
+  ],
+    })})
 
     return NextResponse.json(newTickets);
   } catch (error) {
