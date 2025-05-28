@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useSidebar } from "./ui/sidebar";
+import { useTicketStore } from "@/store";
 
 type Props = {
   tickets: Ticket[];
@@ -18,6 +20,8 @@ type Props = {
 };
 
 export default function TicketsList({ tickets, isMember }: Props) {
+  const { setTicket } = useTicketStore();
+  const { toggleSidebar, open } = useSidebar();
   const [sort, setSort] = React.useState<string>("asc");
   const [sit, setSit] = React.useState<string>("sta+sit");
   const [sortedTickets, setSortedTickets] = React.useState<Ticket[]>(tickets);
@@ -69,6 +73,12 @@ export default function TicketsList({ tickets, isMember }: Props) {
           sortedTickets.map((ticket) => (
             <Card
               key={ticket.id}
+              onClick={() => {
+                if (!open) {
+                  toggleSidebar();
+                }
+                setTicket(ticket);
+              }}
               className="hover:border-blue-500 hover:duration-500 hover:transition-all w-full md:max-w-xs"
             >
               <CardHeader>
