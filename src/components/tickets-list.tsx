@@ -2,13 +2,7 @@
 
 import { Ticket } from "@prisma/client";
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import {
   Select,
   SelectContent,
@@ -63,9 +57,9 @@ export default function TicketsList({ tickets, isMember }: Props) {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="sta+sit">Sedenie + Stánie</SelectItem>
+              <SelectItem value="sta+sit">Sedenie + Státie</SelectItem>
               <SelectItem value="sit">Iba sedenie</SelectItem>
-              <SelectItem value="sta">Iba stánie</SelectItem>
+              <SelectItem value="sta">Iba státie</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

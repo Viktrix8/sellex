@@ -1,13 +1,26 @@
 import type { NextAuthConfig } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authConfig = {
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISORD_CLIENT_SECRET,
-      authorization:
-        "https://discord.com/api/oauth2/authorize?scope=identify+email+guilds",
+      authorization: "https://discord.com/api/oauth2/authorize?scope=identify+email+guilds",
+    }),
+    CredentialsProvider({
+      name: "Guest",
+      credentials: {},
+      async authorize() {
+        return {
+          id: "guest",
+          username: "Guest",
+          isAdmin: false,
+          isMember: false,
+          isGuest: true,
+        };
+      },
     }),
   ],
   callbacks: {
@@ -49,10 +62,7 @@ export const authConfig = {
         if (isOnAdminRoute && !isAdmin) {
           return Response.redirect(new URL("/", nextUrl));
         }
-        if (
-          (path.startsWith("/sell") || path.startsWith("/me")) &&
-          !auth.user.isMember
-        ) {
+        if ((path.startsWith("/sell") || path.startsWith("/me")) && !auth.user.isMember) {
           return Response.redirect(new URL("/", nextUrl));
         }
         return true;
@@ -63,14 +73,23 @@ export const authConfig = {
         return true;
       }
     },
-    async jwt({ token, profile, account }) {
+    async jwt({ token, profile, account, user }) {
+      if (user?.isGuest) {
+        token.username = "Guest";
+        token.id = user.id;
+        token.isGuest = true;
+        token.isAdmin = false;
+        token.isMember = false;
+      }
+
       if (profile) {
         token.username = profile.username;
         token.id = profile.id;
+        token.isGuest = false;
         const adminNicknames = ["viktrix8", "ovosk", "kristian2525"];
         token.isAdmin = adminNicknames.includes(token.username as string);
       }
-      if (account?.access_token) {
+      if (account?.access_token && !token.isGuest) {
         try {
           const res = await fetch("https://discord.com/api/users/@me/guilds", {
             headers: {
@@ -80,9 +99,7 @@ export const authConfig = {
           if (res.ok) {
             const guilds = await res.json();
             const targetGuildId = "1078243458499756032";
-            token.isMember = guilds.some(
-              (guild: { id: string }) => guild.id === targetGuildId
-            );
+            token.isMember = guilds.some((guild: { id: string }) => guild.id === targetGuildId);
           } else {
             token.isMember = false;
           }
@@ -95,10 +112,11 @@ export const authConfig = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.username = token.username;
-        session.user.isAdmin = token.isAdmin;
-        session.user.isMember = token.isMember;
-        session.user.id = token.id;
+        session.user.username = token.username as string;
+        session.user.isAdmin = token.isAdmin as boolean;
+        session.user.isMember = token.isMember as boolean;
+        session.user.id = token.id as string;
+        session.user.isGuest = (token.isGuest ?? false) as boolean;
       }
       return session;
     },

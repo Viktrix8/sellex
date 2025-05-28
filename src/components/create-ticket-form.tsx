@@ -3,21 +3,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "./ui/input";
@@ -56,11 +43,7 @@ const FormSchema = z
       .min(1, "Cena nemôže byť prázdna.")
       .regex(/^\d+(\.\d+)?$/, "Cena musí byť číslo."),
     type: z.boolean().default(false),
-    note: z
-      .string()
-      .min(1, "Vyber prosím typ stánia.")
-      .optional()
-      .or(z.literal("")),
+    note: z.string().min(1, "Vyber prosím typ stánia.").optional().or(z.literal("")),
     count: z
       .string()
       .regex(/^\d+(\.\d+)?$/, "Počet lístkov musí byť číslo.")
@@ -79,7 +62,7 @@ const FormSchema = z
       return data.note && data.count;
     }
     return true;
-  }, "Typ stánia a počet kusov sú povinné pre stánie.");
+  }, "Typ stánia a počet kusov sú povinné pre státie.");
 
 export default function CreateTicketForm({ events }: Props) {
   const router = useRouter();
@@ -100,8 +83,7 @@ export default function CreateTicketForm({ events }: Props) {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const { event, price, seatFrom, seatTo, row, section, type, note, count } =
-      data;
+    const { event, price, seatFrom, seatTo, row, section, type, note, count } = data;
     try {
       const res = await fetch("/api/tickets/create", {
         method: "POST",
@@ -140,30 +122,20 @@ export default function CreateTicketForm({ events }: Props) {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-6"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
               <FormField
                 name="event"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Event</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger>
                         <SelectValue placeholder="Vyber event ticketu" />
                       </SelectTrigger>
                       <SelectContent>
                         {events.map((event) => (
-                          <SelectItem
-                            value={`${event.id}`}
-                            key={event.id}
-                            className="font-bold"
-                          >
+                          <SelectItem value={`${event.id}`} key={event.id} className="font-bold">
                             {event.name} ·
                             <span className="font-normal">
                               {new Date(event.date).toLocaleDateString("sk-sk")}
@@ -182,7 +154,7 @@ export default function CreateTicketForm({ events }: Props) {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Stánie</FormLabel>
+                    <FormLabel>Státie</FormLabel>
                     <Switch
                       checked={field.value}
                       onCheckedChange={(e) => {
@@ -203,18 +175,13 @@ export default function CreateTicketForm({ events }: Props) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Typ Stánia</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <SelectTrigger>
                           <SelectValue placeholder="Vyber typ stánia" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Stánie pri pódiu">
-                            Stánie pri pódiu
-                          </SelectItem>
-                          <SelectItem value="Stánie">Stánie</SelectItem>
+                          <SelectItem value="Stánie pri pódiu">Státie pri pódiu</SelectItem>
+                          <SelectItem value="Stánie">Státie</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -322,13 +289,9 @@ export default function CreateTicketForm({ events }: Props) {
 
               <Button
                 type="submit"
-                disabled={
-                  !form.formState.isValid || form.formState.isSubmitting
-                }
+                disabled={!form.formState.isValid || form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting
-                  ? "Pridáva sa..."
-                  : "Pridaj Ticket"}
+                {form.formState.isSubmitting ? "Pridáva sa..." : "Pridaj Ticket"}
               </Button>
             </form>
           </Form>
