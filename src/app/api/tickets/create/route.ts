@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 
 type TicketBody = {
   eventId: number;
-  section: string;
+  section: number;
   row: number;
   seatFrom: number;
   seatTo: number;
@@ -24,16 +24,13 @@ export async function POST(req: Request) {
     const body = (await req.json()) as TicketBody;
 
     if (body.seatFrom > body.seatTo) {
-      return NextResponse.json(
-        { error: "Invalid seat range" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid seat range" }, { status: 400 });
     }
 
-    const newTicket = await prisma.ticket.create({
+    const newTickets = await prisma.ticket.create({
       data: {
         eventId: body.eventId,
-        section: body.section,
+        section: body.section.toString(),
         row: body.row,
         seatFrom: body.seatFrom,
         seatTo: body.seatTo,
@@ -45,33 +42,23 @@ export async function POST(req: Request) {
       },
       include: { event: true },
     });
-
-    await fetch(
+    fetch(
       "https://discord.com/api/webhooks/1347955350195929088/8bOudKDzusU5LQVPllbs236I4UZVCWPhCCi6pDJvoJ9zG1YH0NXSg0zZESO5H091BJ5T",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
+          content: "",
+          tts: false,
           embeds: [
             {
               id: 652627557,
-              title: "Nový lístok na predaj",
-              description: `👤 Meno: <@${session.user.id}>\n🎤 Akcia: ${
-                newTicket.event.name
-              }\n🎫 Typ lístka: ${
-                newTicket.isStanding ? newTicket.note : "Sedenie"
-              }\n ${
-                !newTicket.isStanding ? `🪑 Sekcia: ${newTicket.section}\n` : ""
-              }\nPočet kusov: ${
-                newTicket.isStanding
-                  ? `${newTicket.count} ks`
-                  : `${
-                      newTicket.seatTo! - newTicket.seatFrom! + 1
-                    } ks (pri sebe)`
-              }\nCena: ${newTicket.price}€`,
-              color: 15105570,
+              title: "Nový Lístok",
+              description: `👤 Meno @${session.user.username}\n\🎤 Akcia ${
+                newTickets.event.name
+              }\n\🎫 Typ lístka ${newTickets.isStanding ? "Stánie" : "Sedenie"}\n\ ${
+                newTickets.section && `Sekcia ${newTickets.section}`
+              }`,
+              color: 2326507,
               fields: [],
             },
           ],
@@ -79,12 +66,9 @@ export async function POST(req: Request) {
       }
     );
 
-    return NextResponse.json(newTicket);
+    return NextResponse.json(newTickets);
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { error: "Failed to create ticket" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create ticket" }, { status: 500 });
   }
 }

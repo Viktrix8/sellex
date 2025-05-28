@@ -23,7 +23,6 @@ export const metadata: Metadata = {
   title: "Sellex - Predaj lístkov na koncerty",
   description: "Sellex - Predaj Listkov",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
